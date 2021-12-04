@@ -11,19 +11,15 @@ app = Flask(__name__)  # initialising the flask app with the name 'app'
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    if(request.method == "POST"):
-        return jsonify({
-            "message": a
-        })
-        data = request.data
-        type = data['type']
-        imagefile = request.files['image']
-        filename = werkzeug.utils.secure_filename(imagefile.filename)
-        imagefile.save("/uploadedimages/" + filename)
-        a = imageProcess(type, filename)
-        return jsonify({
-            "message": a
-        })
+    data = request.get_json()
+    type = data['type']
+    imagefile = data['image']
+    filename = werkzeug.utils.secure_filename(imagefile.filename)
+    imagefile.save("/uploadedimages/" + filename)
+    a = imageProcess(type, filename)
+    return jsonify({
+        "message": a
+    })
 
 
 def imageProcess(type, filename):
