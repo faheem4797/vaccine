@@ -101,9 +101,9 @@ def imageProcess(type, filename):
 
 
 if __name__ == '__main__':
-    
+    port = int(os.getenv('PORT'))
     print("Starting app on port %d" % port)
-    app.run(debug=False, port=8000, host='0.0.0.0')
+    app.run(debug=False, port=port, host='0.0.0.0')
 '''if __name__ == "__main__":
     # running the app on the local machine on port 5000
     app.run(port=5000, debug=True)'''
