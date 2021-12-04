@@ -56,8 +56,7 @@ def imageProcess(type, filename):
                         count = count + 1
                         print(count)
                     else:
-
-                        print('Match not found')
+                        print('Match not found' + location + ',' + bottom_right)
 
             except:
                 return 'error'
@@ -88,7 +87,7 @@ def imageProcess(type, filename):
                         count = count + 1
                     else:
 
-                        print('Match not found')
+                        print('Match not found' + location + ',' + bottom_right)
 
             except:
                 return 'error'
