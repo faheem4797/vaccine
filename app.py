@@ -10,7 +10,6 @@ app = Flask(__name__)  # initialising the flask app with the name 'app'
 
 
 @app.route('/upload', methods=['POST'])
-@cross_origin()
 def upload():
     if(request.method == "POST"):
         data = request.data
@@ -109,6 +108,10 @@ def imageProcess(type, filename):
                 return 'error'
                 print('error bhai')
 
+                
+                
+    else:
+        return 'heavy error'
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT'))
