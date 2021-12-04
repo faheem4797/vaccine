@@ -12,6 +12,9 @@ app = Flask(__name__)  # initialising the flask app with the name 'app'
 @app.route('/upload', methods=['POST'])
 def upload():
     if(request.method == "POST"):
+        return jsonify({
+            "message": a
+        })
         data = request.data
         type = data['type']
         imagefile = request.files['image']
