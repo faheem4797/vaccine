@@ -83,7 +83,7 @@ def imageProcess(type, filename):
 
                 if max_val >= threshold:
                     bottom_right = (location[0] + w, location[1] + h)
-                    if((j == 'assets/card1.jpg' and location == (26, 13) and bottom_right == (783, 173)) or (j == 'assets/card2.jpg' and location == (422, 416) and bottom_right == (906, 790)) or (j == 'assets/card3.jpg' and location == (455, 339) and bottom_right == (788, 788)) or (j == 'assets/card4.jpg' and location == (18, 554) and bottom_right == (902, 788)) or (j == 'assets/card5.jpg' and location == (689, 635) and bottom_right == (903, 930))):
+                    if((j == 'assets/card1.jpg' and location == (26, 14) and bottom_right == (783, 174)) or (j == 'assets/card2.jpg' and location == (422, 417) and bottom_right == (906, 791)) or (j == 'assets/card3.jpg' and location == (455, 340) and bottom_right == (788, 789)) or (j == 'assets/card4.jpg' and location == (18, 554) and bottom_right == (902, 788)) or (j == 'assets/card5.jpg' and location == (689, 635) and bottom_right == (903, 930))):
 
                         print('Match found. Count incremented')
                         count = count + 1
