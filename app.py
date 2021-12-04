@@ -1,5 +1,7 @@
 # doing necessary imports
-from flask import Flask, render_template, request, jsonify, make_response
+from logging import error
+from flask import Flask, render_template, request, jsonify, make_response, json
+from werkzeug.datastructures import ImmutableMultiDict
 from flask_cors import CORS, cross_origin
 import os
 import cv2
@@ -9,17 +11,19 @@ import werkzeug
 app = Flask(__name__)  # initialising the flask app with the name 'app'
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/webhook', methods=['POST'])
+@cross_origin()
 def upload():
-    data = request.get_json()
+    print(request)
+    data = dict(request.form)
     type = data['type']
-    imagefile = data['image']
+    imagefile = request.files['image']
     filename = werkzeug.utils.secure_filename(imagefile.filename)
-    imagefile.save("/uploadedimages/" + filename)
-    a = imageProcess(type, filename)
-    return jsonify({
-        "message": a
-    })
+    imagefile.save("./uploadedimages/" + filename)
+    res = imageProcess(type, filename)
+    r = make_response(res)
+    r.headers['Content-Type'] = 'application/json'
+    return r
 
 
 def imageProcess(type, filename):
@@ -30,8 +34,9 @@ def imageProcess(type, filename):
     smallPortionsCard = ['assets/card1.jpg', 'assets/card2.jpg',
                          'assets/card3.jpg', 'assets/card4.jpg', 'assets/card5.jpg']
 
-# Start Here. Add an if-else for card or certificate. Change the lower checks to see if all 5 are correct
     if (type == 'Certificate'):
+        count = 0
+
         for j in smallPortionsCertificate:
             img = cv2.imread("uploadedimages/" + filename, 0)
             template = cv2.imread(j, 0)
@@ -44,31 +49,29 @@ def imageProcess(type, filename):
                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
                 location = max_loc  # Top left of rectangle
                 threshold = 0.9
-                count = 0
 
                 if max_val >= threshold:
                     bottom_right = (location[0] + w, location[1] + h)
                     if((j == 'assets/new1.jpg' and location == (0, 0) and bottom_right == (941, 238)) or (j == 'assets/new2.jpg' and location == (0, 0) and bottom_right == (164, 490)) or (j == 'assets/new3.jpg' and location == (0, 369) and bottom_right == (1227, 486)) or (j == 'assets/new4.jpg' and location == (917, 198) and bottom_right == (1227, 510)) or (j == 'assets/new5.jpg' and location == (0, 676) and bottom_right == (1227, 869))):
                         print('Match found. Count incremented')
                         count = count + 1
-                        # Change to 2 different if else for card and certificate elahda elahda
-                        # else:
-                        #   break
+                        print(count)
                     else:
                         count = count - 1
+                        print(count)
+
                         print('Match not found. Count deprecated')
-                if (count == 5):
-                    return 'Yes'
-                    print('Send http response that image matches')
-                else:
-                    return 'No'
-                    print('Send http response that image doesnt matche')
+
             except:
                 return 'error'
                 print('error bhai')
+        if (count == 5):
+            return 'Yes'
+        else:
+            return 'No'
 
     elif (type == 'Card'):
-        print('')
+        count = 0
         for j in smallPortionsCard:
             img = cv2.imread("uploadedimages/" + filename, 0)
             template = cv2.imread(j, 0)
@@ -77,11 +80,9 @@ def imageProcess(type, filename):
             try:
                 img2 = img.copy()
                 result = cv2.matchTemplate(img2, template, method)
-
                 min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
                 location = max_loc  # Top left of rectangle
                 threshold = 0.9
-                count = 0
 
                 if max_val >= threshold:
                     bottom_right = (location[0] + w, location[1] + h)
@@ -89,28 +90,19 @@ def imageProcess(type, filename):
 
                         print('Match found. Count incremented')
                         count = count + 1
-                        # Change to 2 different if else for card and certificate elahda elahda
-                        # else:
-                        #   break
                     else:
                         count = count - 1
                         print('Match not found. Count deprecated')
 
-                if (count == 5):
-                    return 'Yes'
-                    print('Send http response that image matches')
-                else:
-                    return 'No'
-                    print('Send http response that image doesnt matche')
-
             except:
                 return 'error'
-                print('error bhai')
+        if (count == 5):
+            count = 0
+            return 'Yes'
+        else:
+            count = 0
+            return 'No'
 
-                
-                
-    else:
-        return 'heavy error'
 
 if __name__ == '__main__':
     port = int(os.getenv('PORT'))
