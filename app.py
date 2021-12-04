@@ -11,10 +11,9 @@ import werkzeug
 app = Flask(__name__)  # initialising the flask app with the name 'app'
 
 
-@app.route('/webhook', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 @cross_origin()
 def upload():
-    print(request)
     data = dict(request.form)
     type = data['type']
     imagefile = request.files['image']
@@ -57,14 +56,11 @@ def imageProcess(type, filename):
                         count = count + 1
                         print(count)
                     else:
-                        count = count - 1
-                        print(count)
 
-                        print('Match not found. Count deprecated')
+                        print('Match not found')
 
             except:
                 return 'error'
-                print('error bhai')
         if (count == 5):
             return 'Yes'
         else:
@@ -91,8 +87,8 @@ def imageProcess(type, filename):
                         print('Match found. Count incremented')
                         count = count + 1
                     else:
-                        count = count - 1
-                        print('Match not found. Count deprecated')
+
+                        print('Match not found')
 
             except:
                 return 'error'
@@ -109,5 +105,5 @@ if __name__ == '__main__':
     print("Starting app on port %d" % port)
     app.run(debug=False, port=port, host='0.0.0.0')
 '''if __name__ == "__main__":
-    # running the app on the local machine on port 8000
+    # running the app on the local machine on port 5000
     app.run(port=5000, debug=True)'''
